@@ -1,0 +1,8 @@
+add_executable(basic_2D_path basic_2D_path.cpp)
+target_link_libraries(basic_2D_path PRIVATE LibraryBasedMatrixOperations)
+
+add_executable(basic_3D_path basic_3D_path.cpp)
+target_link_libraries(basic_3D_path PRIVATE LibraryBasedMatrixOperations)
+
+add_executable(batch_3D_path batch_3D_path.cpp)
+target_link_libraries(batch_3D_path PRIVATE LibraryBasedMatrixOperations devicetimer)
