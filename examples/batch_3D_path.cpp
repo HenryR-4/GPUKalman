@@ -55,7 +55,6 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    // 1 filter state per
     KalmanFilterState<float> initial_state(
         DeviceMatrix<float>(12, 1, {
             0.0f,
@@ -86,6 +85,8 @@ int main(int argc, char** argv)
                   0.0f,       0.0f,       0.0f,       0.0f,       0.0f,       0.0f,       0.0f,       0.0f,       0.0f,       0.0f,       0.0f, 2000000.0f
         })
     );
+
+    // 1 filter state per path
     std::vector<KalmanFilterState<float>> filter_states(zs.size(), initial_state); 
 
     DeviceMatrix<float> F(12, 12, {

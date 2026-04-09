@@ -32,7 +32,6 @@ def KalmanFilter(F, Q, x0, P0, R, H):
         return x
     return run
 
-# 2D path
 zs1 = np.genfromtxt(sys.argv[1], delimiter=',', skip_header=1)
 
 f = KalmanFilter(
@@ -44,8 +43,8 @@ f = KalmanFilter(
     H=np.array([[1,0,0,0],[0,1,0,0]]),
 )
 
-# print('x,y')
+print('x,y')
 x = f(zs1[0])
-# for z in zs1:
-    # x = f(z)
-    # print(f'{x[0]},{x[1]}')
+for z in zs1:
+    x = f(z)
+    print(f'{x[0]},{x[1]}')
