@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+
+import numpy as np
+import sys
+
+if len(sys.argv) < 3:
+    print("Usage: basic_noisy_sensor <truth_file> <variance>")
+    sys.exit(1)
+
+stddev = np.sqrt(float(sys.argv[-1]))
+
+rng = np.random.default_rng()
+
+data = np.genfromtxt(sys.argv[1], delimiter=',', names=True)
+
+for i,col in enumerate(data.dtype.names):
+    for j in range(len(data[col])):
+        data[col][j] += rng.normal(0,stddev)
+
+    if i == len(data.dtype.names)-1:
+        print(col)
+        continue
+    print(col, end=",")
+
+np.savetxt(sys.stdout, data, delimiter=',')

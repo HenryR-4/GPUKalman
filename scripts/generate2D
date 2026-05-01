@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+
+import numpy as np
+import matplotlib.pyplot as plt
+import sys
+
+if len(sys.argv) < 4:
+    print("Usage: generate2D <num_paths> <segments_per_path> <num_steps> [-p]")
+    print("     num_paths - how many total paths")
+    print("     segments_per_path - how many spline segments per path")
+    print("         single digit is fine")
+    print("     num_steps - number of output coordinates per segment")
+    print("         higher is smoother, 50-100 is a good baseline")
+    print("     -p -include if you want a plot")
+    sys.exit(1)
+
+plot = False
+if len(sys.argv) == 5 and sys.argv[4] == '-p':
+    plot = True
+
+num_paths = int(sys.argv[1])
+num_segs = int(sys.argv[2])
+num_steps = int(sys.argv[3])
+
+if num_steps < 2:
+    print("Error: at least 2 steps per segment is required")
+    sys.exit(1)
+
+minpos = -1000
+maxpos =  1000
+
+# generates random 2D path using Hermite splines
+def generatePath():
+    xres = []
+    yres = []
+
+    rng = np.random.default_rng()
+
+    Ps = rng.uniform(minpos, maxpos, (num_segs+1, 2))
+    Vs = rng.uniform(minpos, maxpos, (num_segs+1,2))
+
+    ts = np.arange(0,1,1/num_steps)
+
+    mat = np.array([
+        [ 2, -2,  1,  1],
+        [-3,  3, -2, -1],
+        [ 0,  0,  1,  0],
+        [ 1,  0,  0,  0]
+    ])
+
+    for i in range(1, len(Ps)): # start with 2 points
+        for t in ts:
+            T = np.array([t**3, t**2, t, 1])
+            res = T.dot(mat).dot(np.array([Ps[i-1],Ps[i],Vs[i-1],Vs[i]]))
+            xres.append(res[0])
+            yres.append(res[1])
+
+    return (xres, yres)
+
+paths = []
+for i in range(num_paths):
+    paths.append(generatePath())
+    if i == num_paths-1:
+        print(f'x{i},y{i}', end='')
+        continue
+    print(f'x{i},y{i},', end='')
+
+print('')
+
+for i in range(num_steps*num_segs):
+    for j,(x,y) in enumerate(paths):
+        if j == len(paths)-1:
+            print(f'{x[i]},{y[i]}', end='')
+            continue
+        print(f'{x[i]},{y[i]},', end='')
+    print('')
+
+
+if plot:
+    for p in paths:
+        plt.plot(*p)
+    plt.show()
