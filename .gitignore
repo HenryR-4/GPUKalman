@@ -4,3 +4,4 @@ build/
 report*
 output/
 !example_data.csv
+!input/16.csv

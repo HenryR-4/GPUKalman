@@ -29,11 +29,25 @@ If running on asax you can simply run the asax_build.sh script which will compil
 - CUDAToolkit: cudart, cublas
 
 ## Running
-On asax you can run:
+
+### Simplest steps to run example
+1. Copy this repo to ASAX
+2. run the asax_build.sh script
+3. run the runExamples.sh script
+4. output directory will be generate with csv outputs for both versions
+5. if you wish you may now copy the results somewhere else and plot with the plot script (requires numpy + matplotlib, last line of output must be removed)
+```
+./scripts/asax_build.sh && \
+./scripts/runExample.sh
+```
+Use the provided scripts as reference if you decide to try more examples.
+
+There is also:
 ```
 ./scripts/submitall.sh
 ```
 This will submit all the tests for timing results which will be placed in the output directory.
+It requires inputs of powers of 2 from 0-16 (1-65536) '.csv' to be generated in input directory.
 But be warned it will submit over 150 jobs.
 If you do decide to try this, there is a glob_results.sh script which will gather all the times and print them in a csv format.
 
