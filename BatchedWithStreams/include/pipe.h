@@ -6,7 +6,8 @@
 class Pipe 
 {
     public:
-        Pipe() = default;
+        Pipe(const Pipe& other) = delete;
+        Pipe(Pipe&& other) = delete;
         Pipe(
             int n,
             int m,
@@ -15,7 +16,6 @@ class Pipe
             const float* x0,
             const float* P0
         );
-        Pipe(Pipe&& other);
 
         ~Pipe();
 

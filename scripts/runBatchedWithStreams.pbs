@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#PBS -q classgpu
+#PBS -l select=1:gpuname=ampere:ngpus=1:ncpus=1:mpiprocs=1:mem=2000mb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+#PBS -o run.out
+
+cd $PBS_O_WORKDIR
+
+PROGRAM_NAME=`basename $PROGRAM`
+
+export LD_LIBRARY_PATH=/apps/x86-64/apps/cuda_12.6.0/lib64/ && \
+CUDA_MODULE_LOADING=EAGER $PROGRAM $INPUT_DIR/$N.csv $PIPES > $OUTPUT_DIR/$PROGRAM_NAME-$PIPES-streams-$N.out

@@ -109,57 +109,6 @@ Pipe::Pipe(
     checkCudaErrors(cublasSetStream(h2, s2));
 }
 
-// for use in vector
-Pipe::Pipe(Pipe&& other)
-{
-        n_ = other.n_;
-        m_ = other.m_;
-        batch_size_ = other.batch_size_;
-        filter_ = other.filter_;
-        handle_ = other.handle_;
-        other.handle_ = nullptr;
-
-        mat_1 = other.mat_1;
-        other.mat_1 = nullptr;
-        mat_2 = other.mat_2;
-        other.mat_2 = nullptr;
-        mat_3 = other.mat_3;
-        other.mat_3 = nullptr;
-        mat_4 = other.mat_4;
-        other.mat_4 = nullptr;
-
-        mat_3_pointers = other.mat_3_pointers;
-        other.mat_3_pointers = nullptr;
-        mat_4_pointers = other.mat_4_pointers;
-        other.mat_4_pointers = nullptr;
-
-        vec_1 = other.vec_1;
-        other.vec_1 = nullptr;
-        vec_2 = other.vec_2;
-        other.vec_2 = nullptr;
-        vec_3 = other.vec_3;
-        other.vec_3 = nullptr;
-
-        info = other.info;
-        other.info = nullptr;
-
-        h1 = other.h1;
-        other.h1 = nullptr;
-        h2 = other.h2;
-        other.h2 = nullptr;
-
-        s1 = other.s1;
-        other.s1 = nullptr;
-        s2 = other.s2;
-        other.s2 = nullptr;
-        upload = other.upload;
-        other.upload = nullptr;
-        e1 = other.e1;
-        other.e1 = nullptr;
-        e2 = other.e2;
-        other.e2 = nullptr;
-}
-
 Pipe::~Pipe()
 {
     cudaFree(vec_1);

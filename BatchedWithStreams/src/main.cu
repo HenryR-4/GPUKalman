@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <memory>
 
 #include <helper_cuda.h>
 
@@ -142,13 +143,12 @@ int main(int argc, char* argv[])
     };
     FilterParams filter = { F, Q, H, R };
 
-    std::vector<Pipe> pipes;
-    pipes.reserve(num_pipes);
+    std::vector<std::unique_ptr<Pipe>> pipes(num_pipes);
     int sizes[num_pipes];
     for (int i = 0; i < num_pipes; i++) {
         sizes[i] = batch_size/num_pipes;
         if (i < batch_size%num_pipes) { sizes[i]++; }
-        pipes.push_back(Pipe(N, M, sizes[i], filter, x0, P0));
+        pipes[i] = std::make_unique<Pipe>(N, M, sizes[i], filter, x0, P0);
     }
 
     const int num_times = zs.first.size()/(M*batch_size);
@@ -170,24 +170,28 @@ int main(int argc, char* argv[])
 
     cudaEventRecord(start);
     for (int i = 0; i < num_pipes; i++) {
-        pipes[i].uploadFirstBatch(current_measurement);
+        pipes[i]->uploadFirstBatch(current_measurement);
         current_measurement += M*sizes[i];
     }
     for (int i = 0; i < num_times; i++) {
         for (int j = 0; j < num_pipes; j++) {
-            pipes[j].xhat();
-            pipes[j].Phat();
+            pipes[j]->xhat();
+            pipes[j]->Phat();
 
-            pipes[j].residual();
-            pipes[j].gain();
+            pipes[j]->residual();
+            pipes[j]->gain();
 
-            pipes[j].updateX();
-            pipes[j].updateP();
+            pipes[j]->updateX();
+            pipes[j]->updateP();
 
-            pipes[j].uploadBatch(current_measurement);
-            current_measurement += M*sizes[j];
+            // upload measurement for NEXT! batch
+            // no next batch on last time step
+            if (i < num_times-1) {
+                pipes[j]->uploadBatch(current_measurement);
+                current_measurement += M*sizes[j];
+            }
 
-            pipes[j].downloadBatch(current_result);
+            pipes[j]->downloadBatch(current_result);
             current_result += N*sizes[j];
         }
     }
