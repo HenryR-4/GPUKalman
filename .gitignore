@@ -3,3 +3,4 @@ build/
 *nsys*
 report*
 output/
+!example_data.csv

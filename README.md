@@ -50,6 +50,9 @@ If you want to use the plot script you must remove the last line at the bottom o
 
 ## Generating Data
 
+There is one example data file provided with 16 noisy paths if you do not want to generate more test data.
+I have excluded more due to file size.
+
 If you run the script it should tell you the arguments that it takes.
 Typically you will run the generate2D script followed by the basic_noisy_measurement script.
 All outputs should be redirected to a file.
